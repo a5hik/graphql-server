@@ -1,10 +1,38 @@
-
 import * as Hapi from 'hapi';
+import * as Good from 'good';
+import * as Path from 'path';
 import GraphQL from 'hapi-graphql';
 import {GraphQLSchema} from 'graphql';
 
-const server: Hapi.Server = new Hapi.Server()
+let server: Hapi.Server = new Hapi.Server();
 server.connection({port: 3000});
+
+const options = {
+  ops: {
+    interval: 1000
+  },
+  reporters: {
+    myConsoleReporter: [{
+      module: 'good-squeeze',
+      name: 'Squeeze',
+      args: [{log: '*', response: '*'}]
+    }, {
+      module: 'good-console'
+    }, 'stdout']
+  }
+};
+
+server.register([
+    {
+      register: Good,
+      options: options
+    }], ((err: any): void => {
+    if (err) {
+      throw err;
+    }
+  })
+)
+
 
 server.route({
   method: "GET",
@@ -15,7 +43,7 @@ server.route({
 
 });
 
-server.start((err) => {
+server.start((err: any) => {
   if (err) {
     throw err;
   }
