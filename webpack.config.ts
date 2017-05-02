@@ -20,7 +20,7 @@ module.exports = {
   module: {
     loaders: [
       // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
-      {test: /\.ts(x?)$/, loader: 'babel-loader?compact=false!ts-loader'}
+      {test: /\.ts(x?)$/, loader: 'ts-loader'}
     ]
   },
   target: 'node',

@@ -1,13 +1,15 @@
-'use strict';
-import * as hapi from 'hapi';
 
-const server: hapi.Server = new hapi.Server()
+import * as Hapi from 'hapi';
+import GraphQL from 'hapi-graphql';
+import {GraphQLSchema} from 'graphql';
+
+const server: Hapi.Server = new Hapi.Server()
 server.connection({port: 3000});
 
 server.route({
   method: "GET",
   path: "/",
-  handler: (request: hapi.Request, reply: hapi.IReply) => {
+  handler: (request: Hapi.Request, reply: Hapi.IReply) => {
     reply("Hello World")
   }
 
