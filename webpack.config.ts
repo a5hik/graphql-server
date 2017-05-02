@@ -17,6 +17,12 @@ module.exports = {
     // Add '.ts' and '.tsx' as resolvable extensions.
     extensions: [".ts", ".tsx", ".js"]
   },
+  module: {
+    loaders: [
+      // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
+      {test: /\.ts(x?)$/, loader: 'babel-loader?compact=false!ts-loader'}
+    ]
+  },
   target: 'node',
   output: {
     path: path.join(__dirname, 'dist'),

@@ -4,7 +4,11 @@
   "description": "GraphQl Server for agile project.",
   "main": "index.js",
   "scripts": {
-    "build": "node node_modules/webpack/bin/webpack.js --config webpack.config.ts"
+    "build": "node node_modules/webpack/bin/webpack.js --config webpack.config.ts",
+    "lint": "tslint --type-check --project tsconfig.json",
+    "lint:fix": "npm run lint -- --fix",
+    "coverage": "npm run test -- --coverage",
+    "start": "node dist/main.bundle.js"
   },
   "repository": {
     "type": "git",
@@ -30,6 +34,8 @@
     "@types/inert": "^4.2.0",
     "@types/joi": "^10.3.1",
     "@types/node": "^7.0.15",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
     "source-map-support": "^0.4.15",
     "ts-loader": "^2.0.3",
     "tslint": "^5.1.0",
