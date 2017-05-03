@@ -1,37 +1,19 @@
-import {
-  GraphQLObjectType,
-  GraphQLSchema,
-  GraphQLInt
-} from 'graphql';
+const schema = `
+  type User {
+    id: ID!
+    email: String!
+  }
+  type Query {
+    getUserById(id: ID!): User
+    getUserByEmail(email: String!): User
+  }
+  type Mutation {
+    createUser(email: String!): User
+  }
+  schema {
+    query: Query
+    mutation: Mutation
+  }
+`;
 
-let count = 0;
-
-let schema = new GraphQLSchema({
-  query: new GraphQLObjectType({
-    name: 'RootQueryType',
-    fields: {
-      count: {
-        type: GraphQLInt,
-        description: 'The count!',
-        resolve: function () {
-          return count;
-        }
-      }
-    }
-  }),
-  mutation: new GraphQLObjectType({
-    name: 'RootMutationType',
-    fields: {
-      updateCount: {
-        type: GraphQLInt,
-        description: 'Updates the count',
-        resolve: function () {
-          count += 1;
-          return count;
-        }
-      }
-    }
-  })
-});
-
-export default schema;
+module.exports = schema;
