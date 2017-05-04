@@ -12,7 +12,7 @@ fs.readdirSync('node_modules')
   });
 
 module.exports = {
-  entry: './src/main.ts',
+  entry: './src/server.ts',
   resolve: {
     // Add '.ts' and '.tsx' as resolvable extensions.
     extensions: [".ts", ".tsx", ".js"]
