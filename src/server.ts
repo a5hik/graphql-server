@@ -6,6 +6,7 @@ import {graphqlHapi, graphiqlHapi} from 'graphql-server-hapi';
 import {makeExecutableSchema, addMockFunctionsToSchema} from 'graphql-tools';
 import {Schema} from './data/schema';
 import {Mocks} from './data/mocks';
+import {Resolvers} from './data/resolvers';
 
 let server: Hapi.Server = new Hapi.Server();
 server.connection({port: 3000});
@@ -33,12 +34,7 @@ const options = {
 
 const executableSchema = makeExecutableSchema({
   typeDefs: Schema,
-});
-
-addMockFunctionsToSchema({
-  schema: executableSchema,
-  mocks: Mocks,
-  preserveResolvers: true,
+  resolvers: Resolvers
 });
 
 // Register/Add the plugins/modules
@@ -53,6 +49,7 @@ server.register([
       path: '/graphql',
       graphqlOptions: {
         schema: executableSchema,
+        context: {}
       },
       route: {
         cors: true
