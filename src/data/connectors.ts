@@ -1,36 +1,50 @@
-import Sequelize from 'sequelize';
-// initialize our database
-const db = new Sequelize('chatty', null, null, {
-  dialect: 'sqlite',
-  storage: './chatty.sqlite',
-  logging: false, // mark this true if you want to see logs
-});
-// define groups
-const GroupModel = db.define('group', {
-  name: {type: Sequelize.STRING},
-});
-// define messages
-const MessageModel = db.define('message', {
-  text: {type: Sequelize.STRING},
-});
-// define users
-const UserModel = db.define('user', {
-  email: {type: Sequelize.STRING},
-  username: {type: Sequelize.STRING},
-  password: {type: Sequelize.STRING},
-});
-// users belong to multiple groups
-UserModel.belongsToMany(GroupModel, {through: 'GroupUser'});
-// users belong to multiple users as friends
-UserModel.belongsToMany(UserModel, {through: 'Friends', as: 'friends'});
-// messages are sent from users
-MessageModel.belongsTo(UserModel);
-// messages are sent to groups
-MessageModel.belongsTo(GroupModel);
-// groups have multiple users
-GroupModel.belongsToMany(UserModel, {through: 'GroupUser'});
+import * as Sequelize from 'sequelize';
+import * as faker from 'faker';
+import * as _ from 'lodash';
 
-const Group = db.models.group;
-const Message = db.models.message;
+// initialize our database
+const db = new Sequelize('graphql', 'sw', 'sw', {
+  dialect: 'postgres',
+  host: 'localhost'
+});
+
+// define the models
+const UserModel = db.define('user', {
+  firstName: { type: Sequelize.STRING },
+  lastName: { type: Sequelize.STRING },
+  email: { type: Sequelize.STRING },
+});
+
+const ProjectModel = db.define('project', {
+  name: { type: Sequelize.STRING },
+  active: { type: Sequelize.BOOLEAN },
+});
+
+ProjectModel.hasMany(UserModel);
+UserModel.belongsTo(ProjectModel);
+
+faker.seed(123); // get consistent data every time we reload app
+
+
+db.sync({ force: true }).then(() => {
+  _.times(10, () => {
+    return ProjectModel.create({
+      name: faker.lorem.words(1),
+      active: faker.random.boolean(),
+    }).then((project) => {
+      _.times(30, () => {
+        return project.createUser({
+          firstName: faker.name.firstName(),
+          lastName: faker.name.lastName(),
+          email: faker.internet.email(),
+        });
+      });
+    });
+  });
+});
+
+// export User, Project
 const User = db.models.user;
-export {Group, Message, User};
+const Project = db.models.project;
+
+export { User, Project };

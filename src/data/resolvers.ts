@@ -1,53 +1,45 @@
-import GraphQLDate from 'graphql-date';
-import {Group, Message, User} from './connectors';
+import {Project, User} from './connectors';
+
 export const Resolvers = {
-  Date: GraphQLDate,
+
   Query: {
-    group(_, args) {
-      return Group.find({where: args});
-    },
-    messages(_, args) {
-      return Message.findAll({
-        where: args,
-        order: [['createdAt', 'DESC']],
-      });
-    },
     user(_, args) {
-      return User.findOne({where: args});
+      return User.find({where: args});
+    },
+
+    users(_, args) {
+      return User.findAll({where: args});
+    },
+
+    project(_, args) {
+      return Project.find({where: args});
+    },
+
+    projects(_, args) {
+      return Project.findAll({where: args});
+    }
+  },
+
+  Mutation: {
+    createUser(_, {firstName, lastName, email}) {
+      return User.create({
+        firstName,
+        lastName,
+        email
+      })
     },
   },
-  Group: {
-    users(group) {
-      return group.getUsers();
-    },
-    messages(group) {
-      return Message.findAll({
-        where: {groupId: group.id},
-        order: [['createdAt', 'DESC']],
-      });
-    },
-  },
-  Message: {
-    to(message) {
-      return message.getGroup();
-    },
-    from(message) {
-      return message.getUser();
-    },
-  },
+
   User: {
-    messages(user) {
-      return Message.findAll({
-        where: {userId: user.id},
-        order: [['createdAt', 'DESC']],
-      });
-    },
-    groups(user) {
-      return user.getGroups();
-    },
-    friends(user) {
-      return user.getFriends();
+    project(user) {
+      return user.getProject();
     },
   },
+
+  Project: {
+    users(project) {
+      return project.getUsers();
+    },
+  },
+
 };
-export default Resolvers;
